@@ -9,8 +9,8 @@ pairs = f[0].split(",")
 tot1 = 0
 tot2 = 0
 for pair in pairs:
-    s, e = utils.ints(pair)
-    for n in range(s, abs(e)+1):
+    s, e = utils.positive_ints(pair)
+    for n in range(s, e+1):
         q = str(n)
         if q[:len(q)//2] == q[len(q)//2:]:
             tot1 += n
