@@ -14,7 +14,6 @@ def find_ones_to_remove(b):
         for j in range(len(b[i])):
             ns = 0
             if b[i][j] == "@":
-
                 for ni,nj in utils.find_neighbors_2d_8(i, j):
                     if 0 <= ni < len(b) and 0 <= nj< len(b[i]):
                         if b[ni][nj] == "@":
@@ -25,7 +24,7 @@ def find_ones_to_remove(b):
 
 def game(board, max_iter=math.inf):
     ans = 0
-    iter =0
+    iter = 0
     while True and iter < max_iter:
         iter += 1
         removals = find_ones_to_remove(board)
