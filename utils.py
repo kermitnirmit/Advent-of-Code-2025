@@ -13,6 +13,12 @@ from functools import reduce
 from pprint import pprint
 # import z3
 
+def euclidean_distance(a, b):
+    """
+    Compute the Euclidean distance between two n-dimensional tuples/lists.
+    """
+    return math.sqrt(sum((x - y) ** 2 for x, y in zip(a, b)))
+
 
 def valid_point_on_2d_grid(i, j, grid):
     return 0 <= i < len(grid) and 0 <= j < len(grid[0])
@@ -113,11 +119,13 @@ class UnionFind:
     # parents: List[Optional[int]]
     # ranks: List[int]
     # num_sets: int
+    # sizes: List[int]
 
     def __init__(self, n: int) -> None:
         self.n = n
         self.parents = [None] * n
         self.ranks = [1] * n
+        self.sizes = [1] * n  # size of each set; valid at root
         self.num_sets = n
 
     def find(self, i: int) -> int:
@@ -131,6 +139,10 @@ class UnionFind:
     def in_same_set(self, i: int, j: int) -> bool:
         return self.find(i) == self.find(j)
 
+    def size(self, i: int) -> int:
+        root = self.find(i)
+        return self.sizes[root]
+
     def merge(self, i: int, j: int) -> None:
         i = self.find(i)
         j = self.find(j)
@@ -143,11 +155,14 @@ class UnionFind:
 
         if i_rank < j_rank:
             self.parents[i] = j
+            self.sizes[j] += self.sizes[i]
         elif i_rank > j_rank:
             self.parents[j] = i
+            self.sizes[i] += self.sizes[j]
         else:
             self.parents[j] = i
             self.ranks[i] += 1
+            self.sizes[i] += self.sizes[j]
         self.num_sets -= 1
 
 
