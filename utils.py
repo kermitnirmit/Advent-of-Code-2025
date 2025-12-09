@@ -88,6 +88,45 @@ def binary_search(f, lo=0, hi=None):
 
 BLANK = object()
 
+def cross(ax, ay, bx, by):
+    return ax * by - ay * bx
+
+def on_segment(px, py, x1, y1, x2, y2):
+    # Collinear if cross product is zero
+    if cross(px - x1, py - y1, x2 - x1, y2 - y1) != 0:
+        return False
+
+    # Check bounding box (integer comparisons)
+    if min(x1, x2) <= px <= max(x1, x2) and min(y1, y2) <= py <= max(y1, y2):
+        return True
+
+    return False
+
+def point_in_polygon(px, py, poly):
+    inside = False
+    n = len(poly)
+
+    for i in range(n):
+        x1, y1 = poly[i]
+        x2, y2 = poly[(i + 1) % n]
+
+        # Edge check first
+        if on_segment(px, py, x1, y1, x2, y2):
+            return True
+
+        cond1 = (y1 > py) != (y2 > py)
+        if cond1:
+            # Compute x coordinate where edge crosses y = py
+            # Using integer math safely:
+            x_cross = x1 + (py - y1) * (x2 - x1) // (y2 - y1)
+
+            if x_cross == px:
+                return True
+            if x_cross > px:
+                inside = not inside
+
+    return inside
+
 
 def hamming_distance(a, b) -> int:
     return sum(i is BLANK or j is BLANK or i != j for i, j in itertools.zip_longest(a, b, fillvalue=BLANK))
