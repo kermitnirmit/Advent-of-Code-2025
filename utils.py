@@ -286,3 +286,47 @@ def topological_sort_subset(adj_list, subset):
 # 3dirs
 
 # 4dirs
+
+
+class Rectangle:
+    def __init__(self, p1, p2):
+        """
+        Create a rectangle given two diagonal points (p1 and p2).
+        Each point should be a tuple (x, y).
+        The rectangle is axis-aligned and stores top-left and bottom-right corners.
+        """
+        x1, y1 = p1
+        x2, y2 = p2
+        self.left = min(x1, x2)
+        self.right = max(x1, x2)
+        self.top = min(y1, y2)
+        self.bottom = max(y1, y2)
+        self.top_left = (self.left, self.top)
+        self.bottom_right = (self.right, self.bottom)
+
+    def width(self):
+        return self.right - self.left + 1
+
+    def height(self):
+        return self.bottom - self.top + 1
+
+    def area(self):
+        return self.width() * self.height()
+
+
+    def contains(self, point):
+        x, y = point
+        return self.left <= x <= self.right and self.top <= y <= self.bottom
+
+    def intersect(self, other):
+        """
+        Returns True iff this rectangle (self) and the other rectangle overlap.
+        """
+        if self.right <= other.left or other.right <= self.left:
+            return False
+        if self.bottom <= other.top or other.bottom <= self.top:
+            return False
+        return True
+
+    def __repr__(self):
+        return f"Rectangle({self.top_left}, {self.bottom_right})"
